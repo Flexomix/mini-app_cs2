@@ -45,7 +45,7 @@
         };
 
         // Куда положить значение startapp из Telegram
-        const UTM_KEY = 'utm_content';
+        const UTM_KEY = 'utm_campaign';
 
         // Значение по умолчанию, если метка не передана
         const DEFAULT_VALUE = 'none';
@@ -87,7 +87,7 @@
                 targetUrl.searchParams.set(key, value);
             }
 
-            // 4.2. Динамическая метка → в UTM_KEY (utm_content)
+            // 4.2. Динамическая метка → в UTM_KEY (utm_campaign)
             targetUrl.searchParams.set(UTM_KEY, startParam);
 
             // 5. Редирект
