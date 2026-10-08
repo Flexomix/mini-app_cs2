@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка...</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+        }
+        .loader { text-align: center; }
+        .spinner {
+            width: 40px; height: 40px; margin: 0 auto 16px;
+            border: 4px solid rgba(128,128,128,0.3);
+            border-top-color: var(--tg-theme-button-color, #2481cc);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Загрузка...</div>
+    </div>
+
+<!-- 1. Скрипт tgtrack -->
+
+
+<!-- 2. Стили -->
+<style>
+    #tg-redirect-overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #f0f2f5; display: none;
+        align-items: center; justify-content: center;
+        z-index: 999999; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #333;
+    }
+    #tg-redirect-overlay .loader { text-align: center; }
+    #tg-redirect-overlay .spinner {
+        width: 40px; height: 40px; margin: 0 auto 16px;
+        border: 4px solid rgba(0,0,0,0.1);
+        border-top-color: #2481cc; border-radius: 50%;
+        animation: tg-spin 0.8s linear infinite;
+    }
+    @keyframes tg-spin { to { transform: rotate(360deg); } }
+
+    #tg-fallback-wrap {
+        position: fixed; top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #f0f2f5; display: none;
+        align-items: center; justify-content: center;
+        z-index: 1000000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #333;
+    }
+    #tg-fallback-wrap .inner { text-align: center; padding: 24px; }
+    #tg-fallback-wrap .title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    #tg-fallback-wrap .subtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
+    #tg-fallback-btn {
+        display: inline-block; padding: 14px 28px;
+        background: #2481cc; color: #fff; text-decoration: none;
+        border-radius: 10px; font-size: 16px; font-weight: 600;
+        transition: background 0.2s;
+    }
+    #tg-fallback-btn:hover { background: #1f6fb0; }
+    #tg-fallback-btn:active { background: #1a5f9a; }
+</style>
+
+<!-- 3. Оверлей со спиннером (скрыт) -->
+<div id="tg-redirect-overlay">
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Перенаправление в MAX...</div>
+    </div>
+</div>
+
+<!-- 4. Запасная кнопка (скрыта) -->
+<div id="tg-fallback-wrap">
+    <div class="inner">
+        <div class="title">Не удалось перенаправить автоматически</div>
+        <div class="subtitle">Нажмите кнопку ниже, чтобы открыть MAX</div>
+        <a id="tg-fallback-btn" href="https://t.me/SignallCopyAI_bot" target="_blank" rel="noopener">Открыть MAX</a>
+    </div>
+</div>
+
+<!-- 5. Скрытая ссылка, которую "увидит" tgtrack -->
+<a id="tgtrack-trigger" href="https://max.ru/join/cFMFr6oyNTFZ3CItJnG2S8yxMb7Foqhi94lLx_m_Tag" style="position:absolute; left:-9999px; top:-9999px;">Открыть MAX</a>
+
+<!-- 6. Скрипт редиректа с эмуляцией клика -->
+<script>
+    const overlay = document.getElementById('tg-redirect-overlay');
+    const fallbackWrap = document.getElementById('tg-fallback-wrap');
+    const trigger = document.getElementById('tgtrack-trigger');
+
+    let fallbackShown = false;
+
+    // 1. Если через 400 мс мы всё ещё здесь — показываем спиннер
+    setTimeout(function () {
+        if (!fallbackShown && overlay) overlay.style.display = 'flex';
+    }, 400);
+
+    // 2. Если через 2 секунды всё ещё здесь — показываем запасную кнопку
+    setTimeout(function () {
+        if (!fallbackShown && fallbackWrap) {
+            fallbackShown = true;
+            if (overlay) overlay.style.display = 'none';
+            fallbackWrap.style.display = 'flex';
+        }
+    }, 2000);
+
+    // Эмулируем клик по скрытой ссылке — tgtrack воспримет его как нажатие пользователя
+    function go() {
+        if (fallbackShown) return;
+        if (trigger) trigger.click();
+    }
+
+    if (typeof window !== 'undefined' && window.location) {
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(go, 300);
+        } else {
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(go, 300);
+            });
+            window.addEventListener('load', function () {
+                setTimeout(go, 300);
+            });
+        }
+        setTimeout(go, 1800);
+    }
+</script>
+  
+</body>
+</html>
